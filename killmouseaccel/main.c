@@ -13,31 +13,33 @@
 #include <IOKit/hidsystem/IOHIDParameter.h>
 #include <IOKit/hidsystem/event_status_driver.h>
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     const int32_t accel = -0x10000; // if this ever becomes a scale factor, we set it to one
-    if(argc < 2) {
+
+    if (argc < 2) {
         fprintf(stderr, "Give me mouse and/or trackpad as arguments\n");
         return 1;
     }
-    
+
     io_connect_t handle = NXOpenEventStatus();
-    if(handle) {
-        int i;
-        for(i=1; i<argc; i++) {
+    if (handle) {
+        for (int i = 1; i < argc; i++) {
             CFStringRef type = 0;
-            
-            if(strcmp(argv[i], "mouse") == 0)
+
+            if (strcmp(argv[i], "mouse") == 0) {
                 type = CFSTR(kIOHIDMouseAccelerationType);
-            else if(strcmp(argv[i], "trackpad") == 0)
+            } else if (strcmp(argv[i], "trackpad") == 0) {
                 type = CFSTR(kIOHIDTrackpadAccelerationType);
-            
-            if(type && IOHIDSetParameter(handle, type, &accel, sizeof accel) != KERN_SUCCESS)
+            }
+
+            if (type && IOHIDSetParameter(handle, type, &accel, sizeof accel) != KERN_SUCCESS) {
                 fprintf(stderr, "Failed to kill %s accel\n", argv[i]);
+            }
         }
         NXCloseEventStatus(handle);
-    } else
+    } else {
         fprintf(stderr, "No handle\n");
-    
+    }
+
     return 0;
 }
