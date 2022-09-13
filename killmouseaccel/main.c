@@ -22,24 +22,26 @@ int main(int argc, char **argv) {
     }
 
     io_connect_t handle = NXOpenEventStatus();
-    if (handle) {
-        for (int i = 1; i < argc; i++) {
-            CFStringRef type = 0;
 
-            if (strcmp(argv[i], "mouse") == 0) {
-                type = CFSTR(kIOHIDMouseAccelerationType);
-            } else if (strcmp(argv[i], "trackpad") == 0) {
-                type = CFSTR(kIOHIDTrackpadAccelerationType);
-            }
-
-            if (type && IOHIDSetParameter(handle, type, &accel, sizeof accel) != KERN_SUCCESS) {
-                fprintf(stderr, "Failed to kill %s accel\n", argv[i]);
-            }
-        }
-        NXCloseEventStatus(handle);
-    } else {
-        fprintf(stderr, "No handle\n");
+    if (handle == 0) {
+        fprintf(stderr, "No handle from NXOpenEventStatus\n");
+        return 1;
     }
+
+    for (int i = 1; i < argc; i++) {
+        CFStringRef type = 0;
+
+        if (strcmp(argv[i], "mouse") == 0) {
+            type = CFSTR(kIOHIDMouseAccelerationType);
+        } else if (strcmp(argv[i], "trackpad") == 0) {
+            type = CFSTR(kIOHIDTrackpadAccelerationType);
+        }
+
+        if (type && IOHIDSetParameter(handle, type, &accel, sizeof accel) != KERN_SUCCESS) {
+            fprintf(stderr, "Failed to kill %s accel\n", argv[i]);
+        }
+    }
+    NXCloseEventStatus(handle);
 
     return 0;
 }
