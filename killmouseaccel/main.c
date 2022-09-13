@@ -4,7 +4,7 @@
 //
 //  Created by Christian Höltje on 9/20/11.
 //  This is public domain. The code was originally taken from
-//  http://forums3.armagetronad.net/viewtopic.php?t=3364
+//  https://forums3.armagetronad.net/viewtopic.php?t=3364
 //
 
 #include <stdio.h>
